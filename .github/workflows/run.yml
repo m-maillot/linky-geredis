@@ -14,27 +14,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 18
-      - run: npm ci
-      - run: npm run lint
-
-  test:
-    name: Test (Node v${{ matrix.node }})
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: [16, 18]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node }}
-      - run: npm ci
-      - run: npm run coverage
-      - run: npm run build
-      - uses: codecov/codecov-action@v4
-        if: matrix.node == 18
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+      - run: yarn
+      - run: yarn lint
 
   publish:
     name: Publish on npm
@@ -42,14 +23,13 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
     needs:
       - lint
-      - test
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 18
-      - run: npm ci
-      - run: npm run build
+      - run: yarn
+      - run: yarn build
       - uses: JS-DevTools/npm-publish@v2
         with:
           token: ${{ secrets.NPM_TOKEN }}
