@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2017" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
-    "module": "esnext" /* Specify what module code is generated. */,
+    "module": "NodeNext" /* Specify what module code is generated. */,
     "declaration": true /* Generates corresponding '.d.ts' file. */,
     "outDir": "./dist" /* Redirect output structure to the directory. */,
     "strict": true /* Enable all strict type-checking options. */,

@@ -1,8 +1,8 @@
 {
-  "name": "linky",
-  "description": "Easily retrieve your Linky power consumption",
-  "version": "2.0.2",
-  "author": "bokub",
+  "name": "linky-geredis",
+  "description": "Easily retrieve your Linky Geredis power consumption",
+  "version": "0.0.1",
+  "author": "mmaillot",
   "license": "GPL-3.0-or-later",
   "exports": "./dist/lib/index.js",
   "bin": {
@@ -35,7 +35,7 @@
     "meow": "^12.0.0",
     "mkdirp": "^3.0.1",
     "ora": "^6.3.0",
-    "qs": "^6.11.1",
+    "qs": "^6.13.0",
     "update-notifier": "^6.0.2"
   },
   "devDependencies": {
@@ -59,9 +59,9 @@
     "typescript": "^5.0.4",
     "vitest": "^2.1.0"
   },
-  "repository": "https://github.com/bokub/linky",
-  "homepage": "https://github.com/bokub/linky",
-  "bugs": "https://github.com/bokub/linky/issues",
+  "repository": "https://github.com/m-maillot/linky-geredis",
+  "homepage": "https://github.com/m-maillot/linky-geredis",
+  "bugs": "https://github.com/m-maillot/linky-geredis/issues",
   "keywords": [
     "linky",
     "enedis",

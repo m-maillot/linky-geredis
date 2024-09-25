@@ -1,16 +1,5 @@
-import axios, { AxiosError } from 'axios';
-import qs from 'qs';
-import jwt from 'jsonwebtoken';
-
-const API_HOST = 'https://conso.boris.sh';
-
-export enum DataType {
-  daily_consumption = 'daily_consumption',
-  consumption_load_curve = 'consumption_load_curve',
-  consumption_max_power = 'consumption_max_power',
-  daily_production = 'daily_production',
-  production_load_curve = 'production_load_curve',
-}
+import { AxiosError } from 'axios';
+import { LinkyGeredisAPI } from './LinkyGeredisApi.js';
 
 export type APIResponse = {
   usage_point_id: string;
@@ -65,70 +54,17 @@ export type MaxPowerResponse = APIResponse & {
 };
 
 export class Session {
-  private prms: string[] = [];
-  public userAgent = '@bokub/linky';
+  private api: LinkyGeredisAPI;
 
-  constructor(private token: string, private prm?: string) {
-    try {
-      const decoded: { sub: string[] } = jwt.decode(token) as any;
-      this.prms = decoded.sub;
-    } catch (err) {
-      throw new Error('Le token est invalide');
-    }
-
-    if (!Array.isArray(this.prms) || this.prms.length === 0) {
-      throw new Error('Le token est invalide');
-    }
-
-    if (this.prm && !this.prms.includes(this.prm)) {
-      throw new Error("Ce token ne permet pas d'accéder au PRM " + this.prm);
-    }
+  constructor(private linkyApi: LinkyGeredisAPI) {
+    this.api = linkyApi;
   }
 
   getDailyConsumption(start: string, end: string): Promise<EnergyResponse> {
-    return this.callApi<EnergyResponse>(DataType.daily_consumption, start, end);
-  }
-
-  getLoadCurve(start: string, end: string): Promise<AveragePowerResponse> {
-    return this.callApi<AveragePowerResponse>(DataType.consumption_load_curve, start, end);
+    return this.api.getDailyConsumption(start, end);
   }
 
   getMaxPower(start: string, end: string): Promise<MaxPowerResponse> {
-    return this.callApi<MaxPowerResponse>(DataType.consumption_max_power, start, end);
-  }
-
-  getDailyProduction(start: string, end: string): Promise<EnergyResponse> {
-    return this.callApi<EnergyResponse>(DataType.daily_production, start, end);
-  }
-
-  getProductionLoadCurve(start: string, end: string): Promise<AveragePowerResponse> {
-    return this.callApi<AveragePowerResponse>(DataType.production_load_curve, start, end);
-  }
-
-  private callApi<T>(type: DataType, start: string, end: string): Promise<T> {
-    const url = `${API_HOST}/api/${type}?${qs.stringify({
-      start: start,
-      end: end,
-      prm: this.prm || this.prms[0],
-    })}`;
-
-    return axios
-      .get<T>(url, {
-        headers: {
-          Authorization: `Bearer ${this.token}`,
-          Accept: 'application/json',
-          'User-Agent': this.userAgent,
-        },
-      })
-      .then((res) => res.data)
-      .catch((err) => {
-        if (err.response) {
-          throw new APIError(err, err.response.status, err.response.data);
-        }
-        if (err.request) {
-          throw new Error(`Aucune réponse de Conso API\nRequête : ` + JSON.stringify(err.request, null, 4));
-        }
-        throw new Error(`Impossible d'appeler Conso API\nErreur : ${err.message}`);
-      });
+    return this.api.getMaxPower(start, end);
   }
 }

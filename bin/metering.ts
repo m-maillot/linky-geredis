@@ -5,7 +5,6 @@ import { mkdirp } from 'mkdirp';
 import fs from 'fs';
 import path from 'path';
 import { type APIResponse, Session } from '../lib/index.js';
-import pkg from '../package.json' assert { type: 'json' };
 
 export type Format = 'pretty' | 'json' | 'csv';
 
@@ -16,14 +15,15 @@ export type MeteringFlags = {
   quiet?: boolean;
   format: Format;
   prm?: string;
-  token?: string;
+  user?: string;
+  password?: string;
 };
 
 export class MeteringHandler {
   session: Session;
+
   constructor(private flags: MeteringFlags) {
-    this.session = getSession({ token: this.flags.token, prm: this.flags.prm });
-    this.session.userAgent = `@bokub/linky CLI (v${pkg.version})`;
+    this.session = getSession({ user: this.flags.user, password: this.flags.password, prm: this.flags.prm });
   }
 
   daily() {
@@ -34,24 +34,15 @@ export class MeteringHandler {
   }
 
   loadCurve() {
-    return this.handlePromise(
-      this.session.getLoadCurve(this.flags.start, this.flags.end),
-      'Récupération de la courbe de charge'
-    );
+    throw new Error('Pas supporté');
   }
 
   dailyProduction() {
-    return this.handlePromise(
-      this.session.getDailyProduction(this.flags.start, this.flags.end),
-      'Récupération de la production quotidienne'
-    );
+    throw new Error('Pas supporté');
   }
 
   loadCurveProduction() {
-    return this.handlePromise(
-      this.session.getProductionLoadCurve(this.flags.start, this.flags.end),
-      'Récupération de la courbe de charge de production'
-    );
+    throw new Error('Pas supporté');
   }
 
   maxPower() {

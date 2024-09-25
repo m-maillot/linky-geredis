@@ -18,7 +18,7 @@ const mainHelp = `
     linky <commande> [options]
     
     Commandes:
-      linky auth            Crée une connexion à un compte Enedis. Vous pouvez obtenir un token sur https://conso.boris.sh
+      linky auth            Crée une connexion à un compte Geredis. Vous pouvez obtenir un compte sur https://espace-client.linkygeredis.fr/
       linky daily           Récupère la consommation quotidienne
       linky loadcurve       Récupère la puissance moyenne consommée quotidiennement, sur un intervalle de 30 min
       linky maxpower        Récupère la puissance maximale de consommation atteinte quotidiennement
@@ -39,7 +39,7 @@ const mainHelp = `
         --output    -o      Fichier de sortie. Optionnel
         
     Exemples:
-      linky auth --token xxx.yyy.zzz
+      linky auth --user xxx --password xxx
       linky daily
       linky dailyprod --start 2023-01-01 --end 2023-01-08
       linky maxpower --start 2023-05-01 --end 2023-05-15 --format json --quiet
@@ -62,7 +62,8 @@ const cli = meow(mainHelp, {
   description: false,
   flags: {
     prm: { type: 'string', shortFlag: 'p' },
-    token: { type: 'string', shortFlag: 't' },
+    user: { type: 'string', shortFlag: 'u' },
+    password: { type: 'string', shortFlag: 'p' },
     start: { type: 'string', shortFlag: 's', default: yesterday },
     end: { type: 'string', shortFlag: 'e', default: today },
     output: { type: 'string', shortFlag: 'o' },
@@ -78,7 +79,8 @@ const meteringFlags: MeteringFlags = {
   quiet: cli.flags.quiet,
   format: cli.flags.format as Format,
   prm: cli.flags.prm,
-  token: cli.flags.token,
+  user: cli.flags.user,
+  password: cli.flags.password,
 };
 
 const notifier = updateNotifier({ pkg });
@@ -96,7 +98,7 @@ notifier.notify({
 switch (cli.input[0]) {
   case authCommand:
     try {
-      auth(cli.flags.token);
+      await auth(cli.flags.user, cli.flags.password);
     } catch (e) {
       exit(e);
     }

@@ -1,7 +1,7 @@
 import Conf from 'conf';
 import pkg from '../package.json' assert { type: 'json' };
 
-const TOKEN = 'token';
+const LOGIN = 'login';
 
 const store = new Conf({
   projectName: 'linky',
@@ -13,10 +13,14 @@ const store = new Conf({
   },
 });
 
-export function getToken() {
-  return store.get(TOKEN, undefined) as string | undefined;
+export function getLogin(): { user: string; password: string } | undefined {
+  const login = store.get(LOGIN, undefined);
+  if (login) {
+    return JSON.parse(login as string) as { user: string; password: string };
+  }
+  return undefined;
 }
 
-export function saveToken(token: string) {
-  return store.set(TOKEN, token);
+export function saveLogin(user: string, password: string) {
+  return store.set(LOGIN, JSON.stringify({ user, password }));
 }
