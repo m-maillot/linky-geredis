@@ -55,6 +55,7 @@ export type MaxPowerResponse = APIResponse & {
 
 export class Session {
   private api: LinkyGeredisAPI;
+  public userAgent = '@m-maillot/linky-geredis';
 
   constructor(private linkyApi: LinkyGeredisAPI) {
     this.api = linkyApi;
@@ -64,7 +65,19 @@ export class Session {
     return this.api.getDailyConsumption(start, end);
   }
 
+  getLoadCurve(start: string, end: string): Promise<AveragePowerResponse> {
+    throw new Error("La moyenne de consommation n'est pas supportée");
+  }
+
   getMaxPower(start: string, end: string): Promise<MaxPowerResponse> {
     return this.api.getMaxPower(start, end);
+  }
+
+  getDailyProduction(start: string, end: string): Promise<EnergyResponse> {
+    throw new Error("La production n'est pas supportée");
+  }
+
+  getProductionLoadCurve(start: string, end: string): Promise<AveragePowerResponse> {
+    throw new Error("La production n'est pas supportée");
   }
 }
