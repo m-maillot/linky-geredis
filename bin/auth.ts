@@ -11,8 +11,7 @@ export async function auth(user: string | undefined, password: string | undefine
   }
 
   try {
-    const linkyAPI = new LinkyGeredisAPI(user, password);
-    new Session(linkyAPI);
+    new Session(user, password);
   } catch (e: any) {
     if (e.message) {
       ora().fail(e.message);
@@ -41,5 +40,5 @@ export function getSession({
     throw new Error();
   }
 
-  return new Session(new LinkyGeredisAPI(user, password)); // prm);
+  return new Session(user, password); // prm);
 }

@@ -57,8 +57,8 @@ export class Session {
   private api: LinkyGeredisAPI;
   public userAgent = '@m-maillot/linky-geredis';
 
-  constructor(private linkyApi: LinkyGeredisAPI) {
-    this.api = linkyApi;
+  constructor(private user: string, private password: string) {
+    this.api = new LinkyGeredisAPI(user, password);
   }
 
   getDailyConsumption(start: string, end: string): Promise<EnergyResponse> {
