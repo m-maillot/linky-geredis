@@ -44,7 +44,7 @@ export class LinkyGeredisAPI {
         .map((item) =>
           item.consommation
             ? {
-                value: `${item.consommation ?? ''}`,
+                value: `${item.consommation * 1000}`,
                 date: convertDate(item.date, '04:00'),
               }
             : undefined
@@ -55,7 +55,7 @@ export class LinkyGeredisAPI {
             .map((item) =>
               item.consommation
                 ? {
-                    value: `${item.consommation ?? ''}`,
+                    value: `${item.consommation * 1000}`,
                     date: convertDate(item.date, '12:00'),
                   }
                 : undefined
@@ -89,7 +89,7 @@ export class LinkyGeredisAPI {
           if (hp && hp.consommation && item.consommation) {
             return {
               date: convertDate(item.date),
-              value: `${item.consommation + hp.consommation}`,
+              value: `${(item.consommation + hp.consommation) * 1000}`,
             };
           }
           return undefined;
