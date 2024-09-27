@@ -1,8 +1,8 @@
 import axios from 'axios';
 import ora from 'ora';
 import qs from 'qs';
-import { APIError, type EnergyResponse, type MaxPowerResponse } from '../lib/index.js';
-import type { GeredisApiResponse, PointDaccessResponse } from './GeredisApiResponse.js';
+import { APIError, type AveragePowerResponse, type EnergyResponse, type MaxPowerResponse } from '../lib/index.js';
+import type { ConsommationsJournaliere2, GeredisApiResponse, PointDaccessResponse } from './GeredisApiResponse.js';
 
 type AuthenticationReturn = { code: string; libelle: string };
 
@@ -29,23 +29,79 @@ export class LinkyGeredisAPI {
     this.password = ppassword;
   }
 
+  async getLoadCurve(start: string, end: string): Promise<AveragePowerResponse> {
+    const bearer = await this.generateBearer();
+    const accessPointId = await this.getPointAccesServicesClientId(bearer);
+    const measure = await this.getMeasures(bearer, accessPointId, start, end, MeasureType.CONSUMPTION);
+    const convertDate = (date: string, heure: string): string => {
+      const dateSplit = date.split('/');
+      return `${dateSplit[2]}-${dateSplit[1]}-${dateSplit[0]} ${heure}:00`;
+    };
+    return {
+      reading_type: { aggregate: 'average', measurement_kind: 'power', unit: 'W' },
+      end: measure.periodesActivite[0].dateDebut,
+      interval_reading: measure.periodesActivite[0].blocFournisseur.postesHorosaisonnier[0].consommationsJournalieres
+        .map((item) =>
+          item.consommation
+            ? {
+                value: `${item.consommation ?? ''}`,
+                date: convertDate(item.date, '04:00'),
+              }
+            : undefined
+        )
+        .filter((item) => item !== undefined)
+        .concat(
+          measure.periodesActivite[0].blocFournisseur.postesHorosaisonnier[1].consommationsJournalieres
+            .map((item) =>
+              item.consommation
+                ? {
+                    value: `${item.consommation ?? ''}`,
+                    date: convertDate(item.date, '12:00'),
+                  }
+                : undefined
+            )
+            .filter((item) => item !== undefined)
+        ),
+      quality: '',
+      start: measure.periodesActivite[0].dateFin ?? start,
+      usage_point_id: measure.referencePds,
+    };
+  }
+
   async getDailyConsumption(start: string, end: string): Promise<EnergyResponse> {
     const bearer = await this.generateBearer();
     const accessPointId = await this.getPointAccesServicesClientId(bearer);
     const measure = await this.getMeasures(bearer, accessPointId, start, end, MeasureType.CONSUMPTION);
+    const convertDate = (date: string): string => {
+      const dateSplit = date.split('/');
+      return `${dateSplit[2]}-${dateSplit[1]}-${dateSplit[0]}`;
+    };
+    const mergeConso = (
+      consoHP: ConsommationsJournaliere2[],
+      consoHC: ConsommationsJournaliere2[]
+    ): Array<{
+      value: string;
+      date: string;
+    }> => {
+      return consoHC
+        .map((item) => {
+          const hp = consoHP.find((hp) => hp.date === item.date);
+          if (hp && hp.consommation && item.consommation) {
+            return {
+              date: convertDate(item.date),
+              value: `${item.consommation + hp.consommation}`,
+            };
+          }
+          return undefined;
+        })
+        .filter((item) => item !== undefined);
+    };
     return {
       end: measure.periodesActivite[0].dateDebut,
-      interval_reading: measure.periodesActivite[0].blocFournisseur.postesHorosaisonnier[0].consommationsJournalieres
-        .map((item) => ({
-          value: `${item.consommation ?? ''}`,
-          date: `${item.date}T02:00:00.000+02:00`,
-        }))
-        .concat(
-          measure.periodesActivite[0].blocFournisseur.postesHorosaisonnier[1].consommationsJournalieres.map((item) => ({
-            value: `${item.consommation ?? ''}`,
-            date: `${item.date}T14:00:00.000+02:00`,
-          }))
-        ),
+      interval_reading: mergeConso(
+        measure.periodesActivite[0].blocFournisseur.postesHorosaisonnier[1].consommationsJournalieres,
+        measure.periodesActivite[0].blocFournisseur.postesHorosaisonnier[0].consommationsJournalieres
+      ),
       quality: '',
       reading_type: { aggregate: 'sum', measurement_kind: 'energy', measuring_period: 'P1D', unit: 'Wh' },
       start: measure.periodesActivite[0].dateFin ?? start,
@@ -57,11 +113,15 @@ export class LinkyGeredisAPI {
     const bearer = await this.generateBearer();
     const accessPointId = await this.getPointAccesServicesClientId(bearer);
     const measure = await this.getMeasures(bearer, accessPointId, start, end, MeasureType.MAX_PROWER);
+    const convertDate = (date: string, heure: string): string => {
+      const dateSplit = date.split('/');
+      return `${dateSplit[2]}-${dateSplit[1]}-${dateSplit[0]} ${heure}:00`;
+    };
     return {
       end: measure.periodesActivite[0].dateDebut,
       interval_reading: measure.periodesActivite[0].puissancesMaximales.puissancesJournalieres.map((item) => ({
         value: `${item.puissanceMaximale}`,
-        date: `${item.dateMesure}T${item.heure}.000+02:00`,
+        date: convertDate(item.dateMesure, item.heure),
       })),
       quality: '',
       reading_type: { aggregate: 'maximum', measurement_kind: 'power', measuring_period: 'P1D', unit: 'VA' },

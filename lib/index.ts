@@ -66,7 +66,7 @@ export class Session {
   }
 
   getLoadCurve(start: string, end: string): Promise<AveragePowerResponse> {
-    throw new Error("La moyenne de consommation n'est pas supportée");
+    return this.api.getLoadCurve(start, end);
   }
 
   getMaxPower(start: string, end: string): Promise<MaxPowerResponse> {

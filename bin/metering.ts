@@ -34,7 +34,10 @@ export class MeteringHandler {
   }
 
   loadCurve() {
-    throw new Error('Pas supporté');
+    return this.handlePromise(
+      this.session.getLoadCurve(this.flags.start, this.flags.end),
+      'Récupération de la consommation'
+    );
   }
 
   dailyProduction() {
