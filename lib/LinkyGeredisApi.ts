@@ -1,5 +1,5 @@
 import { type AveragePowerResponse, type EnergyResponse, type MaxPowerResponse } from './index.js';
-import type { ConsommationsJournaliere2 } from './GeredisApiResponse.js';
+import type { ConsommationsJournaliere } from './GeredisApiResponse.js';
 import type { Authentication } from './api/Authentication.js';
 import { AuthenticationChallenger } from './api/Authentication.js';
 import { type Endpoint, EndpointApi, MeasureType } from './api/Endpoint.js';
@@ -34,8 +34,8 @@ export class LinkyGeredisAPI {
       return `${dateSplit[2]}-${dateSplit[1]}-${dateSplit[0]}`;
     };
     const mergeConso = (
-      consoHP: ConsommationsJournaliere2[],
-      consoHC: ConsommationsJournaliere2[]
+      consoHP: ConsommationsJournaliere[],
+      consoHC: ConsommationsJournaliere[]
     ): Array<{
       value: string;
       date: string;
@@ -56,8 +56,8 @@ export class LinkyGeredisAPI {
     return {
       end: measure.periodesActivite[0].dateDebut,
       interval_reading: mergeConso(
-        measure.periodesActivite[0].blocFournisseur.postesHorosaisonnier[1].consommationsJournalieres,
-        measure.periodesActivite[0].blocFournisseur.postesHorosaisonnier[0].consommationsJournalieres
+        measure.periodesActivite[0].blocFournisseur?.postesHorosaisonnier[1].consommationsJournalieres ?? [],
+        measure.periodesActivite[0].blocFournisseur?.postesHorosaisonnier[0].consommationsJournalieres ?? []
       ),
       quality: '',
       reading_type: { aggregate: 'sum', measurement_kind: 'energy', measuring_period: 'P1D', unit: 'Wh' },
@@ -76,10 +76,11 @@ export class LinkyGeredisAPI {
     };
     return {
       end: measure.periodesActivite[0].dateDebut,
-      interval_reading: measure.periodesActivite[0].puissancesMaximales.puissancesJournalieres.map((item) => ({
-        value: `${item.puissanceMaximale}`,
-        date: convertDate(item.dateMesure, item.heure),
-      })),
+      interval_reading:
+        measure.periodesActivite[0].puissancesMaximales?.puissancesJournalieres.map((item) => ({
+          value: `${item.puissanceMaximale}`,
+          date: convertDate(item.dateMesure, item.heure),
+        })) ?? [],
       quality: '',
       reading_type: { aggregate: 'maximum', measurement_kind: 'power', measuring_period: 'P1D', unit: 'VA' },
       start: measure.periodesActivite[0].dateFin ?? start,
