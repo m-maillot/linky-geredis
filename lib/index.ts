@@ -1,5 +1,6 @@
 import { AxiosError } from 'axios';
 import { LinkyGeredisAPI } from './LinkyGeredisApi.js';
+import { AuthenticationChallenger } from './api/Authentication.js';
 
 export type APIResponse = {
   usage_point_id: string;
@@ -55,10 +56,9 @@ export type MaxPowerResponse = APIResponse & {
 
 export class Session {
   private api: LinkyGeredisAPI;
-  public userAgent = '@m-maillot/linky-geredis';
 
   constructor(private user: string, private password: string) {
-    this.api = new LinkyGeredisAPI(user, password);
+    this.api = new LinkyGeredisAPI(new AuthenticationChallenger(user, password));
   }
 
   getDailyConsumption(start: string, end: string): Promise<EnergyResponse> {
@@ -71,13 +71,5 @@ export class Session {
 
   getMaxPower(start: string, end: string): Promise<MaxPowerResponse> {
     return this.api.getMaxPower(start, end);
-  }
-
-  getDailyProduction(start: string, end: string): Promise<EnergyResponse> {
-    throw new Error("La production n'est pas supportée");
-  }
-
-  getProductionLoadCurve(start: string, end: string): Promise<AveragePowerResponse> {
-    throw new Error("La production n'est pas supportée");
   }
 }

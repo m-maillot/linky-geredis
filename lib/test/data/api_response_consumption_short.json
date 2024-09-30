@@ -1,0 +1,613 @@
+{
+  "typeObjet": "historiqueDeMesure.pointDeService",
+  "referencePds": "XXXXXXXX",
+  "activite": {
+    "code": "0",
+    "libelle": "électricité"
+  },
+  "periodesActivite": [
+    {
+      "typeObjet": "historiqueDeMesure.paChronique",
+      "dateDebut": "2024-09-04T07:22:00.000+02:00",
+      "dateFin": null,
+      "blocGRD": {
+        "typeObjet": "historiqueDeMesure.GRDouFournisseur",
+        "referenceCalendrier": "xxxxx",
+        "libelleCalendrier": "xxxxx",
+        "postesHorosaisonnier": [
+          {
+            "typeObjet": "historiqueDeMesure.posteHorosaisonnier",
+            "mnemo": "HPH",
+            "libelle": "HP Saison Haute",
+            "valeurAffichage": 4.0,
+            "etiquette": {
+              "typeObjet": "historiqueDeMesure.etiquette",
+              "id": "xxx",
+              "mnemo": "HPH",
+              "libelle": "Saison Haute HP"
+            },
+            "consommationsJournalieres": [
+              {
+                "typeObjet": "historiqueDeMesure.consoJournalière",
+                "id": "IDConsommationsJournalieres_0",
+                "consommation": 0.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "date": "27/09/2024",
+                "natureReleve": {
+                  "code": "6",
+                  "libelle": "evt réelle"
+                },
+                "index": 0.0
+              },
+              {
+                "typeObjet": "historiqueDeMesure.consoJournalière",
+                "id": "IDConsommationsJournalieres_1",
+                "consommation": 0.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "date": "28/09/2024",
+                "natureReleve": {
+                  "code": "6",
+                  "libelle": "evt réelle"
+                },
+                "index": 0.0
+              },
+              {
+                "typeObjet": "historiqueDeMesure.consoJournalière",
+                "id": "IDConsommationsJournalieres_2",
+                "consommation": 0.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "date": "29/09/2024",
+                "natureReleve": {
+                  "code": "6",
+                  "libelle": "evt réelle"
+                },
+                "index": 0.0
+              },
+              {
+                "typeObjet": "historiqueDeMesure.consoJournalière",
+                "id": "IDConsommationsJournalieres_3",
+                "consommation": null,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "date": "30/09/2024",
+                "natureReleve": {
+                  "code": "6",
+                  "libelle": "evt réelle"
+                },
+                "index": 0.0
+              }
+            ],
+            "consommationsMensuelles": [
+              {
+                "typeObjet": "historiqueDeMesure.consoMensuelle",
+                "consommation": 0.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "annee": 2024,
+                "mois": 9
+              }
+            ],
+            "consommationsAnnuelles": [
+              {
+                "typeObjet": "historiqueDeMesure.consoAnnuelle",
+                "consommation": 0.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "annee": 2024
+              }
+            ]
+          },
+          {
+            "typeObjet": "historiqueDeMesure.posteHorosaisonnier",
+            "mnemo": "HCB",
+            "libelle": "HC Saison Basse",
+            "valeurAffichage": 1.0,
+            "etiquette": {
+              "typeObjet": "historiqueDeMesure.etiquette",
+              "id": "xxxx",
+              "mnemo": "HCB",
+              "libelle": "Saison Basse HC"
+            },
+            "consommationsJournalieres": [
+              {
+                "typeObjet": "historiqueDeMesure.consoJournalière",
+                "id": "IDConsommationsJournalieres_0",
+                "consommation": 8.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "date": "27/09/2024",
+                "natureReleve": {
+                  "code": "6",
+                  "libelle": "evt réelle"
+                },
+                "index": 604.0
+              },
+              {
+                "typeObjet": "historiqueDeMesure.consoJournalière",
+                "id": "IDConsommationsJournalieres_1",
+                "consommation": 4.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "date": "28/09/2024",
+                "natureReleve": {
+                  "code": "6",
+                  "libelle": "evt réelle"
+                },
+                "index": 612.0
+              },
+              {
+                "typeObjet": "historiqueDeMesure.consoJournalière",
+                "id": "IDConsommationsJournalieres_2",
+                "consommation": 9.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "date": "29/09/2024",
+                "natureReleve": {
+                  "code": "6",
+                  "libelle": "evt réelle"
+                },
+                "index": 616.0
+              },
+              {
+                "typeObjet": "historiqueDeMesure.consoJournalière",
+                "id": "IDConsommationsJournalieres_3",
+                "consommation": null,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "date": "30/09/2024",
+                "natureReleve": {
+                  "code": "6",
+                  "libelle": "evt réelle"
+                },
+                "index": 625.0
+              }
+            ],
+            "consommationsMensuelles": [
+              {
+                "typeObjet": "historiqueDeMesure.consoMensuelle",
+                "consommation": 21.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "annee": 2024,
+                "mois": 9
+              }
+            ],
+            "consommationsAnnuelles": [
+              {
+                "typeObjet": "historiqueDeMesure.consoAnnuelle",
+                "consommation": 21.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "annee": 2024
+              }
+            ]
+          },
+          {
+            "typeObjet": "historiqueDeMesure.posteHorosaisonnier",
+            "mnemo": "HCH",
+            "libelle": "HC Saison Haute",
+            "valeurAffichage": 3.0,
+            "etiquette": {
+              "typeObjet": "historiqueDeMesure.etiquette",
+              "id": "xxxx",
+              "mnemo": "HCH",
+              "libelle": "Saison Haute HC"
+            },
+            "consommationsJournalieres": [
+              {
+                "typeObjet": "historiqueDeMesure.consoJournalière",
+                "id": "IDConsommationsJournalieres_0",
+                "consommation": 0.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "date": "27/09/2024",
+                "natureReleve": {
+                  "code": "6",
+                  "libelle": "evt réelle"
+                },
+                "index": 0.0
+              },
+              {
+                "typeObjet": "historiqueDeMesure.consoJournalière",
+                "id": "IDConsommationsJournalieres_1",
+                "consommation": 0.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "date": "28/09/2024",
+                "natureReleve": {
+                  "code": "6",
+                  "libelle": "evt réelle"
+                },
+                "index": 0.0
+              },
+              {
+                "typeObjet": "historiqueDeMesure.consoJournalière",
+                "id": "IDConsommationsJournalieres_2",
+                "consommation": 0.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "date": "29/09/2024",
+                "natureReleve": {
+                  "code": "6",
+                  "libelle": "evt réelle"
+                },
+                "index": 0.0
+              },
+              {
+                "typeObjet": "historiqueDeMesure.consoJournalière",
+                "id": "IDConsommationsJournalieres_3",
+                "consommation": null,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "date": "30/09/2024",
+                "natureReleve": {
+                  "code": "6",
+                  "libelle": "evt réelle"
+                },
+                "index": 0.0
+              }
+            ],
+            "consommationsMensuelles": [
+              {
+                "typeObjet": "historiqueDeMesure.consoMensuelle",
+                "consommation": 0.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "annee": 2024,
+                "mois": 9
+              }
+            ],
+            "consommationsAnnuelles": [
+              {
+                "typeObjet": "historiqueDeMesure.consoAnnuelle",
+                "consommation": 0.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "annee": 2024
+              }
+            ]
+          },
+          {
+            "typeObjet": "historiqueDeMesure.posteHorosaisonnier",
+            "mnemo": "HPB",
+            "libelle": "HP Saison Basse",
+            "valeurAffichage": 2.0,
+            "etiquette": {
+              "typeObjet": "historiqueDeMesure.etiquette",
+              "id": "xxxx",
+              "mnemo": "HPB",
+              "libelle": "Saison Basse HP"
+            },
+            "consommationsJournalieres": [
+              {
+                "typeObjet": "historiqueDeMesure.consoJournalière",
+                "id": "IDConsommationsJournalieres_0",
+                "consommation": 5.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "date": "27/09/2024",
+                "natureReleve": {
+                  "code": "6",
+                  "libelle": "evt réelle"
+                },
+                "index": 520.0
+              },
+              {
+                "typeObjet": "historiqueDeMesure.consoJournalière",
+                "id": "IDConsommationsJournalieres_1",
+                "consommation": 5.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "date": "28/09/2024",
+                "natureReleve": {
+                  "code": "6",
+                  "libelle": "evt réelle"
+                },
+                "index": 525.0
+              },
+              {
+                "typeObjet": "historiqueDeMesure.consoJournalière",
+                "id": "IDConsommationsJournalieres_2",
+                "consommation": 4.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "date": "29/09/2024",
+                "natureReleve": {
+                  "code": "6",
+                  "libelle": "evt réelle"
+                },
+                "index": 530.0
+              },
+              {
+                "typeObjet": "historiqueDeMesure.consoJournalière",
+                "id": "IDConsommationsJournalieres_3",
+                "consommation": null,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "date": "30/09/2024",
+                "natureReleve": {
+                  "code": "6",
+                  "libelle": "evt réelle"
+                },
+                "index": 534.0
+              }
+            ],
+            "consommationsMensuelles": [
+              {
+                "typeObjet": "historiqueDeMesure.consoMensuelle",
+                "consommation": 14.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "annee": 2024,
+                "mois": 9
+              }
+            ],
+            "consommationsAnnuelles": [
+              {
+                "typeObjet": "historiqueDeMesure.consoAnnuelle",
+                "consommation": 14.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "annee": 2024
+              }
+            ]
+          }
+        ]
+      },
+      "blocFournisseur": {
+        "typeObjet": "historiqueDeMesure.GRDouFournisseur",
+        "referenceCalendrier": "200302",
+        "libelleCalendrier": "TRV HPHC",
+        "postesHorosaisonnier": [
+          {
+            "typeObjet": "historiqueDeMesure.posteHorosaisonnier",
+            "mnemo": "P1",
+            "libelle": "P1",
+            "valeurAffichage": 1.0,
+            "etiquette": {
+              "typeObjet": "historiqueDeMesure.etiquette",
+              "id": "xxxxx",
+              "mnemo": "HC",
+              "libelle": "Heures Creuses"
+            },
+            "consommationsJournalieres": [
+              {
+                "typeObjet": "historiqueDeMesure.consoJournalière",
+                "id": "IDConsommationsJournalieres_0",
+                "consommation": 8.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "date": "27/09/2024",
+                "natureReleve": {
+                  "code": "6",
+                  "libelle": "evt réelle"
+                },
+                "index": 604.0
+              },
+              {
+                "typeObjet": "historiqueDeMesure.consoJournalière",
+                "id": "IDConsommationsJournalieres_1",
+                "consommation": 4.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "date": "28/09/2024",
+                "natureReleve": {
+                  "code": "6",
+                  "libelle": "evt réelle"
+                },
+                "index": 612.0
+              },
+              {
+                "typeObjet": "historiqueDeMesure.consoJournalière",
+                "id": "IDConsommationsJournalieres_2",
+                "consommation": 9.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "date": "29/09/2024",
+                "natureReleve": {
+                  "code": "6",
+                  "libelle": "evt réelle"
+                },
+                "index": 616.0
+              },
+              {
+                "typeObjet": "historiqueDeMesure.consoJournalière",
+                "id": "IDConsommationsJournalieres_3",
+                "consommation": null,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "date": "30/09/2024",
+                "natureReleve": {
+                  "code": "6",
+                  "libelle": "evt réelle"
+                },
+                "index": 625.0
+              }
+            ],
+            "consommationsMensuelles": [
+              {
+                "typeObjet": "historiqueDeMesure.consoMensuelle",
+                "consommation": 21.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "annee": 2024,
+                "mois": 9
+              }
+            ],
+            "consommationsAnnuelles": [
+              {
+                "typeObjet": "historiqueDeMesure.consoAnnuelle",
+                "consommation": 21.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "annee": 2024
+              }
+            ]
+          },
+          {
+            "typeObjet": "historiqueDeMesure.posteHorosaisonnier",
+            "mnemo": "P2",
+            "libelle": "P2",
+            "valeurAffichage": 2.0,
+            "etiquette": {
+              "typeObjet": "historiqueDeMesure.etiquette",
+              "id": "xxxxx",
+              "mnemo": "HP",
+              "libelle": "Heures Pleines"
+            },
+            "consommationsJournalieres": [
+              {
+                "typeObjet": "historiqueDeMesure.consoJournalière",
+                "id": "IDConsommationsJournalieres_0",
+                "consommation": 5.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "date": "27/09/2024",
+                "natureReleve": {
+                  "code": "6",
+                  "libelle": "evt réelle"
+                },
+                "index": 520.0
+              },
+              {
+                "typeObjet": "historiqueDeMesure.consoJournalière",
+                "id": "IDConsommationsJournalieres_1",
+                "consommation": 5.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "date": "28/09/2024",
+                "natureReleve": {
+                  "code": "6",
+                  "libelle": "evt réelle"
+                },
+                "index": 525.0
+              },
+              {
+                "typeObjet": "historiqueDeMesure.consoJournalière",
+                "id": "IDConsommationsJournalieres_2",
+                "consommation": 4.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "date": "29/09/2024",
+                "natureReleve": {
+                  "code": "6",
+                  "libelle": "evt réelle"
+                },
+                "index": 530.0
+              },
+              {
+                "typeObjet": "historiqueDeMesure.consoJournalière",
+                "id": "IDConsommationsJournalieres_3",
+                "consommation": null,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "date": "30/09/2024",
+                "natureReleve": {
+                  "code": "6",
+                  "libelle": "evt réelle"
+                },
+                "index": 534.0
+              }
+            ],
+            "consommationsMensuelles": [
+              {
+                "typeObjet": "historiqueDeMesure.consoMensuelle",
+                "consommation": 14.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "annee": 2024,
+                "mois": 9
+              }
+            ],
+            "consommationsAnnuelles": [
+              {
+                "typeObjet": "historiqueDeMesure.consoAnnuelle",
+                "consommation": 14.0,
+                "uniteConsommation": "kWh",
+                "volumeConsommation": 0.0,
+                "uniteVolumeConsommation": null,
+                "coefficientConversion": 0.0,
+                "annee": 2024
+              }
+            ]
+          }
+        ]
+      },
+      "puissancesMaximales": null,
+      "courbe": null
+    }
+  ]
+}

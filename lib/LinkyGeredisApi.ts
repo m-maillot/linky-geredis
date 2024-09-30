@@ -1,77 +1,34 @@
-import axios from 'axios';
-import ora from 'ora';
-import qs from 'qs';
-import { APIError, type AveragePowerResponse, type EnergyResponse, type MaxPowerResponse } from '../lib/index.js';
-import type { ConsommationsJournaliere2, GeredisApiResponse, PointDaccessResponse } from './GeredisApiResponse.js';
+import { type AveragePowerResponse, type EnergyResponse, type MaxPowerResponse } from './index.js';
+import type { ConsommationsJournaliere2 } from './GeredisApiResponse.js';
+import type { Authentication } from './api/Authentication.js';
+import { AuthenticationChallenger } from './api/Authentication.js';
+import { type Endpoint, EndpointApi, MeasureType } from './api/Endpoint.js';
+import { formatLoadCurve } from './formatter.js';
 
-type AuthenticationReturn = { code: string; libelle: string };
-
-type BearerResponse = {
-  access_token: string;
-  token_type: 'Bearer';
-  expires_in: number;
-  scope: string;
-  refresh_token: string;
+export const buildLinkyGeredisApi = (user: string, password: string) => {
+  return new AuthenticationChallenger(user, password);
 };
 
-enum MeasureType {
-  MAX_PROWER = 4,
-  CONSUMPTION = 2,
-}
-
 export class LinkyGeredisAPI {
-  private API_HOST = 'https://espace-client.linkygeredis.fr';
-  private user = '';
-  private password = '';
+  private tokenGenerator: Authentication;
+  private endpoint: Endpoint;
 
-  constructor(private puser: string, private ppassword: string) {
-    this.user = puser;
-    this.password = ppassword;
+  constructor(private generator: Authentication) {
+    this.tokenGenerator = generator;
+    this.endpoint = new EndpointApi();
   }
 
   async getLoadCurve(start: string, end: string): Promise<AveragePowerResponse> {
-    const bearer = await this.generateBearer();
-    const accessPointId = await this.getPointAccesServicesClientId(bearer);
-    const measure = await this.getMeasures(bearer, accessPointId, start, end, MeasureType.CONSUMPTION);
-    const convertDate = (date: string, heure: string): string => {
-      const dateSplit = date.split('/');
-      return `${dateSplit[2]}-${dateSplit[1]}-${dateSplit[0]} ${heure}:00`;
-    };
-    return {
-      reading_type: { aggregate: 'average', measurement_kind: 'power', unit: 'W' },
-      end: measure.periodesActivite[0].dateDebut,
-      interval_reading: measure.periodesActivite[0].blocFournisseur.postesHorosaisonnier[0].consommationsJournalieres
-        .map((item) =>
-          item.consommation
-            ? {
-                value: `${item.consommation * 1000}`,
-                date: convertDate(item.date, '04:00'),
-              }
-            : undefined
-        )
-        .filter((item) => item !== undefined)
-        .concat(
-          measure.periodesActivite[0].blocFournisseur.postesHorosaisonnier[1].consommationsJournalieres
-            .map((item) =>
-              item.consommation
-                ? {
-                    value: `${item.consommation * 1000}`,
-                    date: convertDate(item.date, '12:00'),
-                  }
-                : undefined
-            )
-            .filter((item) => item !== undefined)
-        ),
-      quality: '',
-      start: measure.periodesActivite[0].dateFin ?? start,
-      usage_point_id: measure.referencePds,
-    };
+    const bearer = await this.tokenGenerator.generateBearer();
+    const accessPointId = await this.endpoint.getPointAccesServicesClientId(bearer);
+    const measure = await this.endpoint.getMeasures(bearer, accessPointId, start, end, MeasureType.CONSUMPTION);
+    return formatLoadCurve(measure);
   }
 
   async getDailyConsumption(start: string, end: string): Promise<EnergyResponse> {
-    const bearer = await this.generateBearer();
-    const accessPointId = await this.getPointAccesServicesClientId(bearer);
-    const measure = await this.getMeasures(bearer, accessPointId, start, end, MeasureType.CONSUMPTION);
+    const bearer = await this.tokenGenerator.generateBearer();
+    const accessPointId = await this.endpoint.getPointAccesServicesClientId(bearer);
+    const measure = await this.endpoint.getMeasures(bearer, accessPointId, start, end, MeasureType.CONSUMPTION);
     const convertDate = (date: string): string => {
       const dateSplit = date.split('/');
       return `${dateSplit[2]}-${dateSplit[1]}-${dateSplit[0]}`;
@@ -110,9 +67,9 @@ export class LinkyGeredisAPI {
   }
 
   async getMaxPower(start: string, end: string): Promise<MaxPowerResponse> {
-    const bearer = await this.generateBearer();
-    const accessPointId = await this.getPointAccesServicesClientId(bearer);
-    const measure = await this.getMeasures(bearer, accessPointId, start, end, MeasureType.MAX_PROWER);
+    const bearer = await this.tokenGenerator.generateBearer();
+    const accessPointId = await this.endpoint.getPointAccesServicesClientId(bearer);
+    const measure = await this.endpoint.getMeasures(bearer, accessPointId, start, end, MeasureType.MAX_POWER);
     const convertDate = (date: string, heure: string): string => {
       const dateSplit = date.split('/');
       return `${dateSplit[2]}-${dateSplit[1]}-${dateSplit[0]} ${heure}:00`;
@@ -128,158 +85,5 @@ export class LinkyGeredisAPI {
       start: measure.periodesActivite[0].dateFin ?? start,
       usage_point_id: measure.referencePds,
     };
-  }
-
-  async generateBearer(): Promise<string> {
-    const cookie = await this.extractCookie();
-    ora().info(`Cookie retrieved`);
-    const code = await this.getCode(cookie);
-    ora().info(`Code retrieved`);
-    const bearer = await this.getBearer(code);
-    ora().info(`Bearer retrieved`);
-    return bearer;
-  }
-
-  private async extractCookie(): Promise<string> {
-    const cookieUrl = `${this.API_HOST}/application/auth/externe/authentification`;
-
-    return await axios
-      .post<AuthenticationReturn>(
-        cookieUrl,
-        qs.stringify({
-          username: this.user,
-          password: this.password,
-          client_id: 'aelGRD',
-        }),
-        {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
-          },
-        }
-      )
-      .then((res) => {
-        if (res.status === 200 && res.data.libelle === 'valide') {
-          const cookies =
-            res.headers['set-cookie'] && res.headers['set-cookie'].length > 0
-              ? res.headers['set-cookie'][0].split(';')
-              : [];
-          const cookie = cookies.find((cookie) => cookie.startsWith('cookieOauth'));
-          if (cookie) {
-            return cookie;
-          }
-        }
-        throw new Error(`Wrong response from authentication : ${JSON.stringify(res)}`);
-      })
-      .catch((err) => {
-        if (err.response) {
-          throw new APIError(err, err.response.status, err.response.data);
-        }
-        if (err.request) {
-          throw new Error(`Aucune réponse\nRequête : ` + JSON.stringify(err.request, null, 4));
-        }
-        throw new Error(`Impossible d'appeler\nErreur : ${err.message}`);
-      });
-  }
-
-  private async getCode(cookie: string): Promise<string> {
-    try {
-      const response = await axios.get(`${this.API_HOST}/application/auth/authorize-internet`, {
-        params: {
-          redirect_uri: 'https://espace-client.linkygeredis.fr/autorisation-callback.html',
-          response_type: 'code',
-          code_challenge: 'TgdAhWK-24tgzgXB3s_jrRa3IjCWfeAfZAt-Rym0n84',
-          code_challenge_method: 'S256',
-          client_id: 'aelGRD',
-        },
-        headers: {
-          Cookie: cookie,
-        },
-        maxRedirects: 0,
-        validateStatus: (status) => status === 303,
-      });
-
-      const locationHeader = response.headers['location'];
-      const urlParams = new URLSearchParams(locationHeader.split('?')[1]);
-      const code = urlParams.get('code');
-      if (code) {
-        return code;
-      }
-      throw new Error(`Code absent du header`);
-    } catch (err) {
-      throw new Error(`Impossible de récupérer le code\nErreur : ${err}`);
-    }
-  }
-
-  private async getBearer(code: string): Promise<string> {
-    try {
-      const response = await axios.post<BearerResponse>(
-        `${this.API_HOST}/application/auth/tokenUtilisateurInternet`,
-        qs.stringify({
-          code: code,
-          redirect_uri: 'https://espace-client.linkygeredis.fr/autorisation-callback.html',
-          grant_type: 'authorization_code',
-          code_verifier: 3,
-          client_id: 'aelGRD',
-        }),
-        {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
-          },
-        }
-      );
-
-      return response.data.access_token;
-    } catch (err) {
-      throw new Error(`Impossible de récupérer le bearer\nErreur : ${err}`);
-    }
-  }
-
-  async getPointAccesServicesClientId(bearer: string): Promise<string> {
-    const data = await axios<PointDaccessResponse>({
-      method: 'GET',
-      url: 'https://espace-client.linkygeredis.fr/application/rest/produits/pointsAccesServicesClient',
-      params: {
-        expand: 'pointDeService(espaceDeLivraison)',
-      },
-      headers: {
-        Authorization: `Bearer ${bearer}`,
-      },
-    });
-    return data.data[0].id;
-  }
-
-  async getMeasures(
-    bearer: string,
-    accessPointId: string,
-    start: string,
-    end: string,
-    type: MeasureType
-  ): Promise<GeredisApiResponse> {
-    const measure = await axios<GeredisApiResponse>({
-      method: 'POST',
-      url: `${this.API_HOST}/application/rest/interfaces/aelgrd/historiqueDeMesure`,
-      headers: {
-        Authorization: `Bearer ${bearer}`,
-        'Content-Type': 'application/json; charset=utf-8',
-      },
-      data: {
-        groupesDeGrandeurs: [
-          {
-            codeGroupeGrandeur: {
-              code: `${type}`,
-            },
-            typeObjet: 'produit.GroupeGrandeur',
-          },
-        ],
-        typeObjet: 'DonneesHistoriqueMesureRepresentation',
-        dateDebut: end,
-        pointAccesServicesClient: {
-          id: accessPointId,
-          typeObjet: 'produit.PointAccesServicesClient',
-        },
-        dateFin: start,
-      },
-    });
-    return measure.data;
   }
 }
