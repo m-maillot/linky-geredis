@@ -2,7 +2,6 @@ import { describe, expect, test } from 'vitest';
 import { formatLoadCurve } from '../formatter.js';
 import measure1 from './data/api_response_consumption_short.json';
 import type { GeredisApiResponse } from '../GeredisApiResponse.js';
-import dayjs from 'dayjs';
 
 describe('test du formatteur', () => {
   test('load curve sur une courte période', () => {

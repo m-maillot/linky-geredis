@@ -2,6 +2,7 @@ import ora from 'ora';
 import axios from 'axios';
 import qs from 'qs';
 import { APIError } from '../index.js';
+import dayjs, { type Dayjs } from 'dayjs';
 
 type AuthenticationReturn = { code: string; libelle: string };
 
@@ -23,18 +24,26 @@ export class AuthenticationChallenger implements Authentication {
   private user = '';
   private password = '';
 
+  private bearer: string | null = null;
+  private bearerDeadline: Dayjs | null = null;
+
   constructor(private puser: string, private ppassword: string) {
     this.user = puser;
     this.password = ppassword;
   }
 
   async generateBearer(): Promise<string> {
+    if (this.bearer !== null && this.bearerDeadline?.isAfter(dayjs())) {
+      return this.bearer;
+    }
     const cookie = await this.extractCookie();
     ora().info(`Cookie retrieved`);
     const code = await this.getCode(cookie);
     ora().info(`Code retrieved`);
-    const bearer = await this.getBearer(code);
+    const { bearer, deadline } = await this.getBearer(code);
     ora().info(`Bearer retrieved`);
+    this.bearer = bearer;
+    this.bearerDeadline = deadline;
     return bearer;
   }
 
@@ -108,7 +117,7 @@ export class AuthenticationChallenger implements Authentication {
     }
   }
 
-  private async getBearer(code: string): Promise<string> {
+  private async getBearer(code: string): Promise<{ bearer: string; deadline: Dayjs }> {
     try {
       const response = await axios.post<BearerResponse>(
         `${this.API_HOST}/application/auth/tokenUtilisateurInternet`,
@@ -126,7 +135,10 @@ export class AuthenticationChallenger implements Authentication {
         }
       );
 
-      return response.data.access_token;
+      return {
+        bearer: response.data.access_token,
+        deadline: dayjs().add(response.data.expires_in, 's'),
+      };
     } catch (err) {
       throw new Error(`Impossible de récupérer le bearer\nErreur : ${err}`);
     }
