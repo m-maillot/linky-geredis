@@ -32,18 +32,18 @@ const mapPoste = (poste: PostesHorosaisonnier) => {
 };
 
 export const formatLoadCurve = (measure: GeredisApiResponse): AveragePowerResponse => {
-  const periods = measure.periodesActivite.length > 0 ? measure.periodesActivite[0] : null;
-  if (periods === null || periods.blocFournisseur === null) {
-    throw new Error('Aucune période trouvée pour la période');
-  }
-  const interval_reading = periods.blocFournisseur.postesHorosaisonnier
-    .flatMap(mapPoste)
-    .filter((item) => item !== undefined)
-    .sort((a, b) => (a.date.isBefore(b.date) ? -1 : 1))
-    .map((item) => ({
-      value: item.value,
-      date: item.date.toISOString(),
-    }));
+  const interval_reading = measure.periodesActivite.flatMap(
+    (period) =>
+      period.blocFournisseur?.postesHorosaisonnier
+        .flatMap(mapPoste)
+        .filter((item) => item !== undefined)
+        .sort((a, b) => (a.date.isBefore(b.date) ? -1 : 1))
+        .map((item) => ({
+          value: item.value,
+          date: item.date.toISOString(),
+        })) ?? []
+  );
+
   return {
     reading_type: { aggregate: 'average', measurement_kind: 'power', unit: 'W' },
     end: interval_reading[interval_reading.length - 1].date,

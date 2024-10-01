@@ -4,6 +4,7 @@ import type { Authentication } from './api/Authentication.js';
 import { AuthenticationChallenger } from './api/Authentication.js';
 import { type Endpoint, EndpointApi, MeasureType } from './api/Endpoint.js';
 import { formatLoadCurve } from './formatter.js';
+import dayjs from 'dayjs';
 
 export const buildLinkyGeredisApi = (user: string, password: string) => {
   return new AuthenticationChallenger(user, password);
@@ -21,8 +22,23 @@ export class LinkyGeredisAPI {
   async getLoadCurve(start: string, end: string): Promise<AveragePowerResponse> {
     const bearer = await this.tokenGenerator.generateBearer();
     const accessPointId = await this.endpoint.getPointAccesServicesClientId(bearer);
-    const measure = await this.endpoint.getMeasures(bearer, accessPointId, start, end, MeasureType.CONSUMPTION);
-    return formatLoadCurve(measure);
+    const endDate = dayjs();
+    const startDate = endDate.add(-1, 'day').set('h', 22).set('m', 1).set('s', 0);
+    const measure = await this.endpoint.getMeasures(
+      bearer,
+      accessPointId,
+      startDate.format('YYYY-MM-DDTHH:mm:ss[Z]'),
+      endDate.format('YYYY-MM-DDTHH:mm:ss[Z]'),
+      MeasureType.CONSUMPTION
+    );
+    const result = formatLoadCurve(measure);
+    return {
+      ...result,
+      interval_reading: result.interval_reading.filter(({ date }) => {
+        const d = dayjs(date);
+        return d.isAfter(dayjs(`${start}T00:00:00`)) && d.isBefore(dayjs(`${end}T00:00:00`));
+      }),
+    };
   }
 
   async getDailyConsumption(start: string, end: string): Promise<EnergyResponse> {

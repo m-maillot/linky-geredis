@@ -32,8 +32,6 @@ export interface PeriodesActivite {
 
 export interface BlocFournisseur {
   typeObjet: string;
-  referenceCalendrier: string;
-  libelleCalendrier: string;
   postesHorosaisonnier: PostesHorosaisonnier[];
 }
 
